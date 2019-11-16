@@ -1,0 +1,2 @@
+# ignore requirements.txt because this file will change depending on packages selected and I want this to stay unchanged on the master.
+requirements.txt
