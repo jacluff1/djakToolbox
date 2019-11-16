@@ -1,0 +1,10 @@
+pip
+ipython
+matplotlib
+numpy
+pandas
+scipy
+sklearn
+torch
+tqdm
+test
