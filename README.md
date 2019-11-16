@@ -52,5 +52,4 @@ if you have decided to add more packages to your existing build:
 ```bash
 ./update.sh <args>
 ```
-where <args> are the names of any packages you would like to build
-where <args> are optional arguments used to update djakToolbox. 
+where args are the names of any packages you would like to build 
