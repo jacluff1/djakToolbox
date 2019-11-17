@@ -1,7 +1,10 @@
 # pull from master
 git pull origin master
 
+# create empty array to hold installed packages
+installed=()
 # open packages.txt and collect all packages
+
 # add submodules for each input argument not already in packages
 
 # update all submodules recursively, initializing them if not done so already

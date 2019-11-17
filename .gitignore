@@ -2,4 +2,4 @@
 requirements.txt
 
 # ignore packages; it is generated at install
-packages.txt
+.packages.txt

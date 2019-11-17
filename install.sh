@@ -1,7 +1,40 @@
-# package options
+# required pacakages
 required=(BASH fileme printme)
+# SSH urls for required packages
+required_SSH=(git@github.com:jacluff1/BASH.git git@github.com:jacluff1/fileme.git git@github.com:jacluff1/printme.git)
+# HTTPS urls for required packages
+reequired_HTTPS=(https://github.com/jacluff1/BASH.git https://github.com/jacluff1/fileme.git https://github.com/jacluff1/printme.git)
+# number of required packages
+Nrequired=${#required[@]}
+
+# optional packages
+# NOTE changing options here requires changing correlary options, options_SSH and options_HTTPS in update.sh
 optional=(constants doepy mathpy mlpy physpy plotme)
+
+# all available options for user argument input
 full=(${optional[@]} barebones)
+
+# get the remote origin url
+url=$(git remote get-url origin)
+if [ $url == git@github.com:jacluff1/djakToolbox.git ]; then
+    usingSSH=True
+    printf "\nadding required submodules using ssh urls\n"
+    # add required sub modules using SSH
+    for ((idx=0; idx<$Nrequired; idx++)); do
+        printf "adding ${required[$idx]}\n"
+        git submodule add ${required_SSH[$idx]}
+    done;
+else
+    usingSSH=False
+    printf "\nadding required submodules using https urls\n"
+    # add required sub modules using HTTPS
+    for ((idx=0; idx<$Nrequired; idx++)); do
+        printf "adding ${required[$idx]}\n"
+        git submodule add ${reequired_HTTPS[$idx]}
+fi
+
+# recursively initialize submodules
+git submodule update --init --recursive
 
 # if there is no input
 if [ ${#@} == 0 ]; then
@@ -35,10 +68,8 @@ else
     fi;
 fi
 
-echo ${packages[@]}
-
 # create empty file to hold package names
-if [ ! -f packages.txt ]; then touch packages.txt; fi
+if [ ! -f .packages.txt ]; then touch .packages.txt; fi
 
 # run update with selected packages
 # ./update.sh ${packages[@]}
