@@ -1,2 +1,5 @@
 # ignore requirements.txt because this file will change depending on packages selected and I want this to stay unchanged on the master.
 requirements.txt
+
+# ignore packages; it is generated at install
+packages.txt
