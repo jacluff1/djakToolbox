@@ -101,13 +101,17 @@ if [ $Nrequested \> 0 ]; then
         # add submodules
         for ((idx=0; idx<$Nneed; idx++)); do
             pkg=${need[$idx]}
-            idx1=$(./BASH/functions/find_index.sh $pkg ${options[@]})
+            # find the index in options associated with selected package
+            idx1=$(./BASH/functions/find_index.sh $pkg ${optional[@]})
             if [ $usingSSH == True ]; then
                 url1=${optional_SSH[$idx1]};
             else
                 url1=${optional_HTTPS[$idx1]};
             fi
-            git submodule add -f ${url1}
+            # add submodule
+            git submodule add ${url1}
+            # make sure djakToolbox doesn't load to master
+            echo "$pkg/" >> .gitignore
         done
 
     fi
@@ -116,7 +120,7 @@ fi
 
 
 # update all submodules recursively, initializing them if not done so already
-# git submodule update --init --recursive
+git submodule update --init --recursive
 
 # go into each submodule, if there is a requirements.txt make sure all its requirements are main requirements.txt
 
