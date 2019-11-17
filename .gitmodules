@@ -1,0 +1,12 @@
+[submodule "BASH"]
+	path = BASH
+	url = git@github.com:jacluff1/BASH.git
+[submodule "fileme"]
+	path = fileme
+	url = git@github.com:jacluff1/fileme.git
+[submodule "printme"]
+	path = printme
+	url = git@github.com:jacluff1/printme.git
+[submodule "constants"]
+	path = constants
+	url = git@github.com:jacluff1/constants.git

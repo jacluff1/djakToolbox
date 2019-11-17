@@ -1,14 +1,26 @@
 # required pacakages
-required=(BASH fileme printme)
+required=(
+    BASH
+    fileme
+    printme
+)
 # SSH urls for required packages
-required_SSH=(git@github.com:jacluff1/BASH.git git@github.com:jacluff1/fileme.git git@github.com:jacluff1/printme.git)
+required_SSH=(
+    git@github.com:jacluff1/BASH.git
+    git@github.com:jacluff1/fileme.git
+    git@github.com:jacluff1/printme.git
+)
 # HTTPS urls for required packages
-reequired_HTTPS=(https://github.com/jacluff1/BASH.git https://github.com/jacluff1/fileme.git https://github.com/jacluff1/printme.git)
+reequired_HTTPS=(
+    https://github.com/jacluff1/BASH.git
+    https://github.com/jacluff1/fileme.git
+    https://github.com/jacluff1/printme.git
+)
 # number of required packages
 Nrequired=${#required[@]}
 
 # optional packages
-# NOTE changing options here requires changing correlary options, options_SSH and options_HTTPS in update.sh
+# NOTE: changing options here requires changing correlary options, options_SSH and options_HTTPS in update.sh as well as the ignored package directories in .gitignore.
 optional=(constants doepy mathpy mlpy physpy plotme)
 
 # all available options for user argument input
@@ -31,6 +43,7 @@ else
     for ((idx=0; idx<$Nrequired; idx++)); do
         printf "adding ${required[$idx]}\n"
         git submodule add ${reequired_HTTPS[$idx]}
+    done;
 fi
 
 # recursively initialize submodules
@@ -73,6 +86,6 @@ if [ ! -f .packages.txt ]; then touch .packages.txt; fi
 
 # run update with selected packages
 # ./update.sh ${packages[@]}
-
+#
 # use the set environment script from BASH
 # ./BASH/setEnv.sh djakToolbox
