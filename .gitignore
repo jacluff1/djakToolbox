@@ -13,14 +13,7 @@ djakToolboxVenv/
 # ignore gitmodules; it is generated at install
 .gitmodules
 
-
-# ignore ALL the packages; cloned and initialized during install; they don't need to be on master branch
+# ignore ALL the packages; cloned and initialized during install; they don't need to be on master branch. optional packages are added to .gitignore during update
 BASH/
 fileme/
 printme/
-doepy/
-plotme/
-mathpy/
-physpy/
-constants/
-mlpy/
