@@ -31,7 +31,7 @@ optional_HTTPS=(
 )
 
 # pull from master
-# git pull origin master
+git pull origin master
 
 # take a look at what is installed
 installed=$(./BASH/functions/return_lines_from_files.sh .packages.txt)
@@ -148,4 +148,10 @@ deactivate
 source envSet.sh
 
 # install/update requirements in main requirements.txt
-pip install -U -r requirements.txt
+pip install -U -r requirements.txt --no-cache-dir
+
+# make sure and ignore the changes in the master concerning any changes to submodules; they are updated on their own. once git reset HEAD is used on the submodules here, .gitignore will kick in and make sure they stay out
+git reset HEAD .gitmodules
+for x in ${packages[@]}; do
+    git reset HEAD $x;
+done
