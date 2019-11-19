@@ -1,4 +1,6 @@
 # required pacakages
+# NOTE: changing values here requires changing values in update.sh
+# TODO: have required packages, required_SSH, and required _HTTPS in txt files found in a config folder
 required=(
     BASH
     fileme
@@ -85,7 +87,7 @@ fi
 if [ ! -f .packages.txt ]; then touch .packages.txt; fi
 
 # run update with selected packages
-# ./update.sh ${packages[@]}
+./update.sh ${packages[@]}
 #
 # use the set environment script from BASH
-# ./BASH/setEnv.sh djakToolbox
+./BASH/setEnv.sh djakToolbox

@@ -34,7 +34,7 @@ optional_HTTPS=(
 # git pull origin master
 
 # take a look at what is installed
-installed=$(BASH/functions/return_lines_from_files.sh .packages.txt)
+installed=$(./BASH/functions/return_lines_from_files.sh .packages.txt)
 Ninstalled=${#installed[@]}
 if [ $Ninstalled == 0 ]; then
     printf "\nfound no packages installed\n\n";
@@ -112,6 +112,8 @@ if [ $Nrequested \> 0 ]; then
             git submodule add ${url1}
             # make sure djakToolbox doesn't load to master
             echo "$pkg/" >> .gitignore
+            # add module to list of installed optional packages
+            echo "$pkg" >> .packages.txt
         done
 
     fi
@@ -122,7 +124,28 @@ fi
 # update all submodules recursively, initializing them if not done so already
 git submodule update --init --recursive
 
-# go into each submodule, if there is a requirements.txt make sure all its requirements are main requirements.txt
+# get a list of all the required packages as well as up-to-date installed packages
+# NOTE: changing the required packages here will require changing required array in install.sh
+required=(BASH fileme printme)
+installed=$(./BASH/functions/return_lines_from_files.sh .packages.txt)
+packages=(${required[@]} ${installed[@]})
+
+# from all the packages, make a list of all requirements.txt files
+req_files=()
+for x in ${packages[@]}; do
+    x1=$x/requirements.txt
+    if [ -f $x1 ]; then req_files+=($x1); fi;
+done
+unique=$(./BASH/functions/find_unique_from_files.sh ${req_files[@]})
+
+# re-write the requirements.txt file
+if [ -f requirements.txt ]; then rm requirements.txt; fi
+touch requirements.txt
+for x in ${unique[@]}; do echo $x >> requirements.txt; done
+
+# deactivate any current environment (will print warning if no environment activated; but it won't hurt anything)
+deactivate
+source envSet.sh
 
 # install/update requirements in main requirements.txt
-# pip install -U -r requirements.txt
+pip install -U -r requirements.txt
