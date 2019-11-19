@@ -1,5 +1,5 @@
 # djakToolbox
-UNDER INITIAL DEVELOPMENT; UNSTABLE!! a collection of sub-modules that work in tandem to act as a base in various engineering or scientific experiments or projects.
+djakToolbox (dee-jack toolbox) is a master module that shall hold all new generalized tools I develop for various engineering, physics, simulation and/or surrogate (meta) model type projects. djakToolbox works as of now, but the submodules are still under heavy construction and I will actively be adding to them as I go. If you are interested in contributing and don't know how, you can follow the general instructions found [here](https://kbroman.org/github_tutorial/pages/fork.html)
 
 recommended install method (linux)
 ==================================
@@ -46,10 +46,10 @@ recommended update method (linux)
 =================================
 enter in the terminal (from djakTools home directory)
 ```bash
-./update.sh
+source update.sh
 ```
 if you have decided to add more packages to your existing build:
 ```bash
-./update.sh <args>
+source update.sh <args>
 ```
 where args are the names of any packages you would like to build 
