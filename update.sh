@@ -1,40 +1,13 @@
-# optional packages
-# NOTE: changing optional packages here will require updating the optional packages array in install.sh and adding optional package names to ignored directories in .gitignore.
-optional=(
-    constants
-    doepy
-    mathpy
-    mlpy
-    physpy
-    plotme
-)
-# for x in ${@}; do
-#     if [[ "${optional[@]}" =~ "$x" ]]; then echo $x in options; fi
-# done
-# SSH urls for optional packages
-optional_SSH=(
-    git@github.com:jacluff1/constants.git
-    git@github.com:jacluff1/doepy.git
-    git@github.com:jacluff1/mathpy.git
-    git@github.com:jacluff1/mlpy.git
-    git@github.com:jacluff1/physpy.git
-    git@github.com:jacluff1/plotme.git
-)
-# HTTPS urls for optional packages
-optional_HTTPS=(
-    https://github.com/jacluff1/constants.git
-    https://github.com/jacluff1/doepy.git
-    https://github.com/jacluff1/mathpy.git
-    https://github.com/jacluff1/mlpy.git
-    https://github.com/jacluff1/physpy.git
-    https://github.com/jacluff1/plotme.git
-)
+
+# optional packages and urls
+optional=$(.BASH/functions/read_lines.sh config/optional.txt)
+optional_SSH=$(.BASH/functions/read_lines.sh config/optional_SSH.txt)
+optional_HTTPS=$(.BASH/functions/read_lines.sh config/optional_HTTPS.txt)
 
 # pull from master
 git pull origin master
 
-# take a look at what is installed
-installed=$(./BASH/functions/return_lines_from_files.sh .packages.txt)
+installed=$(./BASH/functions/read_lines config/installed.txt)
 Ninstalled=${#installed[@]}
 if [ $Ninstalled == 0 ]; then
     printf "\nfound no packages installed\n\n";
@@ -127,7 +100,7 @@ git submodule update --init --recursive
 # get a list of all the required packages as well as up-to-date installed packages
 # NOTE: changing the required packages here will require changing required array in install.sh
 required=(BASH fileme printme)
-installed=$(./BASH/functions/return_lines_from_files.sh .packages.txt)
+installed=$(./BASH/functions/read_lines.sh config/installed.txt)
 packages=(${required[@]} ${installed[@]})
 
 # from all the packages, make a list of all requirements.txt files
@@ -136,7 +109,7 @@ for x in ${packages[@]}; do
     x1=$x/requirements.txt
     if [ -f $x1 ]; then req_files+=($x1); fi;
 done
-unique=$(./BASH/functions/find_unique_from_files.sh ${req_files[@]})
+unique=$(./BASH/functions/find_unique.sh ${req_files[@]})
 
 # re-write the requirements.txt file
 if [ -f requirements.txt ]; then rm requirements.txt; fi

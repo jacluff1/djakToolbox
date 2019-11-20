@@ -1,0 +1,6 @@
+git@github.com:jacluff1/constants.git
+git@github.com:jacluff1/doepy.git
+git@github.com:jacluff1/mathpy.git
+git@github.com:jacluff1/mlpy.git
+git@github.com:jacluff1/physpy.git
+git@github.com:jacluff1/plotme.git
