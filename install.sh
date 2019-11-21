@@ -35,7 +35,7 @@ for ((idx=0; idx<${#required[@]}; idx++)); do
             url1=${required_HTTPS[$idx]};
         fi
         # add submodule
-        git submodule add ${url1}
+        git submodule add --force ${url1}
         # add submodule to installed list
         echo "${required[$idx]}" > config/installed.txt;
     else
