@@ -1,21 +1,17 @@
-# quick function to read lines from text
-read_lines () {
-    local array=()
-    while IFS= read -r line; do
-        array+=($line)
-    done < $1
-    echo ${array[@]}
-}
 
-# load package data from config/
-required=$(read_lines config/required.txt)
-required_SSH=$(read_lines config/required_SSH.txt)
-required_HTTPS=$(read_lines config/required_HTTPS.txt)
-optional=$(read_lines config/optional.txt)
-installed=$(read_lines config/installed.txt)
+# declare needed arrays
+required=()
+required_SSH=()
+required_HTTPS=()
+optional=()
+installed=()
 
-# number of required packages
-Nrequired=${#required[@]}
+# fill in arrays by reading in lines
+while IFS= read -r line; do required+=($line); done < config/required.txt
+while IFS= read -r line; do required_SSH+=($line); done < config/required_SSH.txt
+while IFS= read -r line; do required_HTTPS+=($line); done < config/required_HTTPS.txt
+while IFS= read -r line; do optional+=($line); done < config/optional.txt
+while IFS= read -r line; do installed+=($line); done < config/installed.txt
 
 # all available options for user argument input
 full=(${optional[@]} barebones)
@@ -29,7 +25,7 @@ else
 fi
 
 # add required submodules
-for ((idx=0; idx<$Nrequired; idx++)); do
+for ((idx=0; idx<${#required[@]}; idx++)); do
     if ! [[ "${installed[@]}" =~ "${required[$idx]}" ]]; then
         if [ $usingSSH == True ]; then
             printf "\nadding ${required[$idx]} using ssh urls\n"
@@ -41,9 +37,10 @@ for ((idx=0; idx<$Nrequired; idx++)); do
         # add submodule
         git submodule add $url1
         # add submodule to installed list
-        echo "${required[$idx]}" >> config/installed.txt;
+        echo "${required[$idx]}" > config/installed.txt;
     else
-        echo "${required[$idx]} already installed; skipping"
+        echo "${required[$idx]} already installed; skipping";
+    fi
 done
 
 # recursively initialize submodules
@@ -85,11 +82,8 @@ else
     fi;
 fi
 
-# create empty file to hold package names
-if [ ! -f .packages.txt ]; then touch .packages.txt; fi
-
 # run update with selected packages
 ./update.sh ${packages[@]}
-#
+
 # use the set environment script from BASH
-./BASH/setEnv.sh djakToolbox
+./BASH/envSet.sh djakToolbox

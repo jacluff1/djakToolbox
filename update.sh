@@ -1,8 +1,8 @@
 
 # optional packages and urls
-optional=$(.BASH/functions/read_lines.sh config/optional.txt)
-optional_SSH=$(.BASH/functions/read_lines.sh config/optional_SSH.txt)
-optional_HTTPS=$(.BASH/functions/read_lines.sh config/optional_HTTPS.txt)
+optional=$(./BASH/functions/read_lines.sh config/optional.txt)
+optional_SSH=$(./BASH/functions/read_lines.sh config/optional_SSH.txt)
+optional_HTTPS=$(./BASH/functions/read_lines.sh config/optional_HTTPS.txt)
 
 # pull from master
 git pull origin master

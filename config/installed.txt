@@ -1,6 +1,0 @@
-doepy
-plotme
-mathpy
-physpy
-constants
-mlpy
