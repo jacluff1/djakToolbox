@@ -35,7 +35,7 @@ for ((idx=0; idx<${#required[@]}; idx++)); do
             url1=${required_HTTPS[$idx]};
         fi
         # add submodule
-        git submodule add $url1
+        git submodule add ${url1}
         # add submodule to installed list
         echo "${required[$idx]}" > config/installed.txt;
     else
@@ -82,8 +82,8 @@ else
     fi;
 fi
 
-# run update with selected packages
-./update.sh ${packages[@]}
-
-# use the set environment script from BASH
-./BASH/envSet.sh djakToolbox
+# # run update with selected packages
+# ./update.sh ${packages[@]}
+#
+# # use the set environment script from BASH
+# ./BASH/envSet.sh djakToolbox

@@ -86,7 +86,7 @@ if [ $Nrequested \> 0 ]; then
             # make sure djakToolbox doesn't load to master
             echo "$pkg/" >> .gitignore
             # add module to list of installed optional packages
-            echo "$pkg" >> .packages.txt
+            echo "$pkg" >> config/installed.txt
         done
 
     fi
