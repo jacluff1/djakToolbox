@@ -1,13 +1,14 @@
 
-# optional packages and urls
-optional=$(./BASH/functions/read_lines.sh config/optional.txt)
-optional_SSH=$(./BASH/functions/read_lines.sh config/optional_SSH.txt)
-optional_HTTPS=$(./BASH/functions/read_lines.sh config/optional_HTTPS.txt)
-
 # pull from master
 git pull origin master
 
+# optional packages and urls
 installed=$(./BASH/functions/read_lines config/installed.txt)
+optional=$(./BASH/functions/read_lines.sh config/optional.txt)
+optional_HTTPS=$(./BASH/functions/read_lines.sh config/optional_HTTPS.txt)
+optional_SSH=$(./BASH/functions/read_lines.sh config/optional_SSH.txt)
+required=$(./BASH/functions/read_lines.sh config/required.txt)
+
 Ninstalled=${#installed[@]}
 if [ $Ninstalled == 0 ]; then
     printf "\nfound no packages installed\n\n";
@@ -32,6 +33,13 @@ if [ $Nrequested \> 0 ]; then
     have=()
     invalid=()
     need=()
+    # make sure required packages are installed
+    for ((idx=0; idx<${#required[@]}; idx++)); do
+        pkg=${required[$idx]}
+        if ! [[ "${installed[@]}" =~ "$pkg" ]]; do
+            need+=($pkg);
+        fi
+    # make sure requested packages are installed
     for ((idx=0; idx<$Nrequested; idx++)); do
         pkg=${requested[$idx]}
         # check if requested package is already installed
@@ -82,7 +90,7 @@ if [ $Nrequested \> 0 ]; then
                 url1=${optional_HTTPS[$idx1]};
             fi
             # add submodule
-            git submodule add ${url1}
+            git submodule add --force ${url1}
             # make sure djakToolbox doesn't load to master
             echo "$pkg/" >> .gitignore
             # add module to list of installed optional packages
@@ -93,19 +101,15 @@ if [ $Nrequested \> 0 ]; then
 
 fi
 
-
 # update all submodules recursively, initializing them if not done so already
 git submodule update --init --recursive
 
-# get a list of all the required packages as well as up-to-date installed packages
-# NOTE: changing the required packages here will require changing required array in install.sh
-required=(BASH fileme printme)
+# get a list of all up-to-date installed packages
 installed=$(./BASH/functions/read_lines.sh config/installed.txt)
-packages=(${required[@]} ${installed[@]})
 
 # from all the packages, make a list of all requirements.txt files
 req_files=()
-for x in ${packages[@]}; do
+for x in ${installed[@]}; do
     x1=$x/requirements.txt
     if [ -f $x1 ]; then req_files+=($x1); fi;
 done
@@ -125,6 +129,6 @@ pip install -U -r requirements.txt --no-cache-dir
 
 # make sure and ignore the changes in the master concerning any changes to submodules; they are updated on their own. once git reset HEAD is used on the submodules here, .gitignore will kick in and make sure they stay out
 git reset HEAD .gitmodules
-for x in ${packages[@]}; do
+for x in ${installed[@]}; do
     git reset HEAD $x;
 done

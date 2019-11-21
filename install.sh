@@ -37,7 +37,7 @@ for ((idx=0; idx<${#required[@]}; idx++)); do
         # add submodule
         git submodule add --force ${url1}
         # add submodule to installed list
-        echo "${required[$idx]}" > config/installed.txt;
+        echo "${required[$idx]}" >> config/installed.txt;
     else
         echo "${required[$idx]} already installed; skipping";
     fi
@@ -82,8 +82,8 @@ else
     fi;
 fi
 
-# # run update with selected packages
-# ./update.sh ${packages[@]}
-#
-# # use the set environment script from BASH
-# ./BASH/envSet.sh djakToolbox
+# run update with selected packages
+./update.sh ${packages[@]}
+
+# use the set environment script from BASH
+./BASH/envSet.sh djakToolbox

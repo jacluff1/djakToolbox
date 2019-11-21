@@ -13,9 +13,6 @@ config/installed.txt
 # ignore virtual environment folder
 djakToolboxVenv/
 
-# ignore gitmodules; it is generated at install
-.gitmodules
-
 # ignore ALL the packages; cloned and initialized during install; they don't need to be on master branch
 BASH/
 utilitypy/
