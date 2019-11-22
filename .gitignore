@@ -13,6 +13,28 @@ config/installed.txt
 # ignore virtual environment folder
 djakToolboxVenv/
 
+<<<<<<< HEAD
 # ignore ALL the packages; cloned and initialized during install; they don't need to be on master branch
 BASH/
 utilitypy/
+=======
+# ignore gitmodules; it is generated at install
+.gitmodules
+
+# ignore ALL the packages; cloned and initialized during install; they don't need to be on master branch. optional packages are added to .gitignore during update
+BASH/
+fileme/
+printme/
+>>>>>>> fcddb979702cfa37a7d80b550b4c18727e8059a5
+constants/
+doepy/
+mathpy/
+mlpy/
+physpy/
+plotme/
+constants/
+doepy/
+mathpy/
+mlpy/
+physpy/
+plotme/

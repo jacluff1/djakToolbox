@@ -95,7 +95,7 @@ if [ $Nrequested \> 0 ]; then
                 url1=${optional_HTTPS[$idx1]};
             fi
             # add submodule
-            git submodule add ${url1}
+            git submodule add --force ${url1}
             # make sure djakToolbox doesn't load to master
             echo "$pkg/" >> .gitignore
             # add module to list of installed optional packages
@@ -110,7 +110,8 @@ fi
 git submodule update --init --recursive
 
 # get a list of all up-to-date installed packages
-installed=$(./BASH/functions/read_lines.sh config/installed.txt)
+installed=()
+while IFS= read -r line; do insalled+=($line); done < config/installed.txt
 
 # from all the packages, make a list of all requirements.txt files
 req_files=()
