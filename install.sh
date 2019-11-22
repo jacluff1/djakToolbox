@@ -1,11 +1,11 @@
 
+# TODO: find a way to package this into a callable function and update BASH/functions/read_lines.sh
 # declare needed arrays
 required=()
 required_SSH=()
 required_HTTPS=()
 optional=()
 installed=()
-
 # fill in arrays by reading in lines
 while IFS= read -r line; do required+=($line); done < config/required.txt
 while IFS= read -r line; do required_SSH+=($line); done < config/required_SSH.txt
