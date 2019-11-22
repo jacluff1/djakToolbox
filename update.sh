@@ -1,40 +1,21 @@
-# optional packages
-# NOTE: changing optional packages here will require updating the optional packages array in install.sh and adding optional package names to ignored directories in .gitignore.
-optional=(
-    constants
-    doepy
-    mathpy
-    mlpy
-    physpy
-    plotme
-)
-# for x in ${@}; do
-#     if [[ "${optional[@]}" =~ "$x" ]]; then echo $x in options; fi
-# done
-# SSH urls for optional packages
-optional_SSH=(
-    git@github.com:jacluff1/constants.git
-    git@github.com:jacluff1/doepy.git
-    git@github.com:jacluff1/mathpy.git
-    git@github.com:jacluff1/mlpy.git
-    git@github.com:jacluff1/physpy.git
-    git@github.com:jacluff1/plotme.git
-)
-# HTTPS urls for optional packages
-optional_HTTPS=(
-    https://github.com/jacluff1/constants.git
-    https://github.com/jacluff1/doepy.git
-    https://github.com/jacluff1/mathpy.git
-    https://github.com/jacluff1/mlpy.git
-    https://github.com/jacluff1/physpy.git
-    https://github.com/jacluff1/plotme.git
-)
 
 # pull from master
 git pull origin master
 
-# take a look at what is installed
-installed=$(./BASH/functions/return_lines_from_files.sh .packages.txt)
+# TODO: find a way to package this into a callable function and update BASH/functions/read_lines.sh
+# declare optional packages and urls
+installed=()
+optional=()
+optional_HTTPS=()
+optional_SSH=()
+required=()
+# fill in the arrays
+while IFS= read -r line; do installed+=($line); done < config/installed.txt
+while IFS= read -r line; do optional+=($line); done < config/optional.txt
+while IFS= read -r line; do optional_HTTPS+=($line); done < config/optional_HTTPS.txt
+while IFS= read -r line; do optional_SSH+=($line); done < config/optional_SSH.txt
+while IFS= read -r line; do required+=($line); done < config/required.txt
+
 Ninstalled=${#installed[@]}
 if [ $Ninstalled == 0 ]; then
     printf "\nfound no packages installed\n\n";
@@ -59,6 +40,11 @@ if [ $Nrequested \> 0 ]; then
     have=()
     invalid=()
     need=()
+    # make sure required packages are installed
+    for x in ${required[@]}; do
+        if ! [[ "${required[@]}" =~ "$x" ]]; then need+=($x); fi
+    done
+    # make sure requested packages are installed
     for ((idx=0; idx<$Nrequested; idx++)); do
         pkg=${requested[$idx]}
         # check if requested package is already installed
@@ -109,34 +95,31 @@ if [ $Nrequested \> 0 ]; then
                 url1=${optional_HTTPS[$idx1]};
             fi
             # add submodule
-            git submodule add ${url1}
+            git submodule add --force ${url1}
             # make sure djakToolbox doesn't load to master
             echo "$pkg/" >> .gitignore
             # add module to list of installed optional packages
-            echo "$pkg" >> .packages.txt
+            echo "$pkg" >> config/installed.txt
         done
 
     fi
 
 fi
 
-
 # update all submodules recursively, initializing them if not done so already
 git submodule update --init --recursive
 
-# get a list of all the required packages as well as up-to-date installed packages
-# NOTE: changing the required packages here will require changing required array in install.sh
-required=(BASH fileme printme)
-installed=$(./BASH/functions/return_lines_from_files.sh .packages.txt)
-packages=(${required[@]} ${installed[@]})
+# get a list of all up-to-date installed packages
+installed=()
+while IFS= read -r line; do insalled+=($line); done < config/installed.txt
 
 # from all the packages, make a list of all requirements.txt files
 req_files=()
-for x in ${packages[@]}; do
+for x in ${installed[@]}; do
     x1=$x/requirements.txt
     if [ -f $x1 ]; then req_files+=($x1); fi;
 done
-unique=$(./BASH/functions/find_unique_from_files.sh ${req_files[@]})
+unique=$(./BASH/functions/find_unique.sh ${req_files[@]})
 
 # re-write the requirements.txt file
 if [ -f requirements.txt ]; then rm requirements.txt; fi
@@ -152,6 +135,6 @@ pip install -U -r requirements.txt --no-cache-dir
 
 # make sure and ignore the changes in the master concerning any changes to submodules; they are updated on their own. once git reset HEAD is used on the submodules here, .gitignore will kick in and make sure they stay out
 git reset HEAD .gitmodules
-for x in ${packages[@]}; do
+for x in ${installed[@]}; do
     git reset HEAD $x;
 done
