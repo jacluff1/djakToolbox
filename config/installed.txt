@@ -1,0 +1,8 @@
+BASH
+utilitypy
+constants
+doepy
+mathpy
+mlpy
+physpy
+plotme
