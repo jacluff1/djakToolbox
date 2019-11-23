@@ -1,9 +1,20 @@
 
-# ignore requirements.txt because this file will change depending on packages selected and I want this to stay unchanged on the master.
-requirements.txt
+# ignore virtual environment folder
+djakToolboxVenv/
 
 # ignore generated config files
 config/installed.txt
 
-# ignore virtual environment folder
-djakToolboxVenv/
+# ignore all sub-modules
+.gitmodules
+BASH/
+constants/
+doepy/
+mathpy/
+mlpy/
+physpy/
+plotme/
+utilitypy/
+
+# ignore requirements.txt because this file will change depending on packages selected and I want this to stay unchanged on the master.
+requirements.txt
