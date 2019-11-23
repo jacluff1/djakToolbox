@@ -36,6 +36,9 @@ for ((idx=0; idx<${#required[@]}; idx++)); do
         fi
         # add submodule
         git submodule add ${url1}
+        # line above does a 'git add .submodules' and 'git add $pkg' which is enforced, regardless of the .gitignore. lits unstage those files and let the .gitignore handle it
+        git reset HEAD .gitmodules
+        git reset HEAD ${required[$idx]}
         # add submodule to installed list
         echo "${required[$idx]}" >> config/installed.txt;
     else

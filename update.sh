@@ -96,9 +96,10 @@ if [ $Nrequested \> 0 ]; then
             fi
             # add submodule
             git submodule add --force ${url1}
-            # make sure djakToolbox doesn't load to master
-            echo "$pkg/" >> .gitignore
-            # add module to list of installed optional packages
+            # line above does a 'git add .submodules' and 'git add $pkg' which is enforced, regardless of the .gitignore. lits unstage those files and let the .gitignore handle it
+            git reset HEAD .gitmodules
+            git reset HEAD $pkg
+            # add newly installed package to installed list
             echo "$pkg" >> config/installed.txt
         done
 
