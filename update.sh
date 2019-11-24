@@ -32,7 +32,7 @@ fi
 
 # take a look at what packages are requested for install
 requested=()
-for x in ${@:2}; do requested+=($x); done
+for x in ${@}; do requested+=($x); done
 Nrequested=${#requested[@]}
 if [ $Nrequested == 0 ]; then
     printf "no optional packages requested for install\n\n";
