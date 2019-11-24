@@ -114,13 +114,24 @@ fi
 installed=()
 while IFS= read -r line; do insalled+=($line); done < config/installed.txt
 
+# TODO: fix BASH/functions/find_unique.sh
 # from all the packages, make a list of all requirements.txt files
-req_files=()
+# req_files=()
+# for x in ${installed[@]}; do
+#     x1=$x/requirements.txt
+#     if [ -f $x1 ]; then req_files+=($x1); fi;
+# done
+# unique=$(./BASH/functions/find_unique.sh ${req_files[@]})
+reqs=()
 for x in ${installed[@]}; do
-    x1=$x/requirements.txt
-    if [ -f $x1 ]; then req_files+=($x1); fi;
+    while IFS= read -r line; do
+        reqs+=($line);
+    done < $x
 done
-unique=$(./BASH/functions/find_unique.sh ${req_files[@]})
+unique=()
+for x in ${reqs[@]}; do
+    if ! [[ "${reqs[@]}" =~ "$x" ]]; then unique+=($x); fi
+done
 
 # re-write the requirements.txt file
 printf "\nUPDATING requirements.txt\n"
