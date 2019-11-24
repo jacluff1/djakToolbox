@@ -123,6 +123,7 @@ done
 unique=$(./BASH/functions/find_unique.sh ${req_files[@]})
 
 # re-write the requirements.txt file
+printf "\nUPDATING requirements.txt\n"
 if [ -f requirements.txt ]; then rm requirements.txt; fi
 touch requirements.txt
 for x in ${unique[@]}; do echo $x >> requirements.txt; done
@@ -131,4 +132,5 @@ for x in ${unique[@]}; do echo $x >> requirements.txt; done
 source envSet.sh
 
 #install/update requirements in main requirements.txt
-# pip install -U -r requirements.txt --no-cache-dir
+printf "\nUPDATING PYTHON PACKAGES\n"
+pip install -U -r requirements.txt --no-cache-dir
