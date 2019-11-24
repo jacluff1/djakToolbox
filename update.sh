@@ -1,7 +1,4 @@
 
-# pull from master
-git pull origin master
-
 # TODO: find a way to package this into a callable function and update BASH/functions/read_lines.sh
 # declare optional packages and urls
 installed=()
@@ -16,6 +13,15 @@ while IFS= read -r line; do optional_HTTPS+=($line); done < config/optional_HTTP
 while IFS= read -r line; do optional_SSH+=($line); done < config/optional_SSH.txt
 while IFS= read -r line; do required+=($line); done < config/required.txt
 
+# update repository and sub-repositories
+djakHome=$(pwd)
+./BASH/git_update.sh
+for pkg in ${installed[@]}; do
+    cd $pkg
+    $djakHome/BASH/git_update.sh
+    cd $djakHome;
+done
+
 Ninstalled=${#installed[@]}
 if [ $Ninstalled == 0 ]; then
     printf "\nfound no packages installed\n\n";
@@ -26,7 +32,7 @@ fi
 
 # take a look at what packages are requested for install
 requested=()
-for x in ${@}; do requested+=($x); done
+for x in ${@:2}; do requested+=($x); done
 Nrequested=${#requested[@]}
 if [ $Nrequested == 0 ]; then
     printf "no optional packages requested for install\n\n";
@@ -94,11 +100,8 @@ if [ $Nrequested \> 0 ]; then
             else
                 url1=${optional_HTTPS[$idx1]};
             fi
-            # add submodule
-            git submodule add --force ${url1}
-            # line above does a 'git add .submodules' and 'git add $pkg' which is enforced, regardless of the .gitignore. lits unstage those files and let the .gitignore handle it
-            git reset HEAD .gitmodules
-            git reset HEAD $pkg
+            # clone repo
+            git clone ${url1}
             # add newly installed package to installed list
             echo "$pkg" >> config/installed.txt
         done
@@ -106,9 +109,6 @@ if [ $Nrequested \> 0 ]; then
     fi
 
 fi
-
-# update all submodules recursively, initializing them if not done so already
-git submodule update --init --recursive
 
 # get a list of all up-to-date installed packages
 installed=()
@@ -127,15 +127,8 @@ if [ -f requirements.txt ]; then rm requirements.txt; fi
 touch requirements.txt
 for x in ${unique[@]}; do echo $x >> requirements.txt; done
 
-# deactivate any current environment (will print warning if no environment activated; but it won't hurt anything)
-deactivate
+# run the set environment script
 source envSet.sh
 
-# install/update requirements in main requirements.txt
-pip install -U -r requirements.txt --no-cache-dir
-
-# make sure and ignore the changes in the master concerning any changes to submodules; they are updated on their own. once git reset HEAD is used on the submodules here, .gitignore will kick in and make sure they stay out
-git reset HEAD .gitmodules
-for x in ${installed[@]}; do
-    git reset HEAD $x;
-done
+#install/update requirements in main requirements.txt
+# pip install -U -r requirements.txt --no-cache-dir

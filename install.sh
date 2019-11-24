@@ -34,24 +34,14 @@ for ((idx=0; idx<${#required[@]}; idx++)); do
             printf "\nadding required submodules using https urls\n"
             url1=${required_HTTPS[$idx]};
         fi
-        # add submodule
-        git submodule add ${url1}
-        # line above does a 'git add .submodules' and 'git add $pkg' which is enforced, regardless of the .gitignore. lits unstage those files and let the .gitignore handle it
-        git reset HEAD .gitmodules
-        git reset HEAD ${required[$idx]}
+        # clone repository
+        git clone ${url}
         # add submodule to installed list
         echo "${required[$idx]}" >> config/installed.txt;
     else
         echo "${required[$idx]} already installed; skipping";
     fi
 done
-
-# recursively initialize submodules
-git submodule update --init --recursive
-
-# ensure that all newly added packages are ignored; after this step, .gitignore will kick in.
-git reset HEAD .gitmodules
-for x in ${required[@]}; do git reset HEAD $x; done
 
 # if there is no input
 if [ ${#@} == 0 ]; then
@@ -86,7 +76,7 @@ else
 fi
 
 # run update with selected packages
-./update.sh ${packages[@]}
+./update.sh "first commit, install" ${packages[@]}
 
 # use the set environment script from BASH
 ./BASH/envSet.sh djakToolbox
